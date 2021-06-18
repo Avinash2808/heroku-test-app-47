@@ -1,0 +1,367 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8,IE=9,IE=10,IE=11,edge,firefox,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Epicenter Contactless Attendance Solution</title>
+	<!-- <link href="static/css/style.css" rel="stylesheet" /> -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+
+    {{ JSGlue.include() }}
+</head>
+
+
+<body>
+
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+
+    <div id="parent">
+        <table class="center" cellpadding="0" cellspacing="0">
+            <tr>
+                <td width="50%">
+                    <div class="left_panel">
+                        <div class="title1">
+                           <h5 id="guide">Turn your head slowly left, right, bottom, up during recording</h5>
+                        </div>
+                        <div class="camera">
+                            <video id="video" width="300" height="250" autoplay></video>
+
+
+                        </div>
+
+                        <div class="camera-btn">
+                            <center>
+                                <button type="button" class="start-btn" id="job-des-btn"></button>
+
+                            </center>
+                        </div>
+                        <div class="" id="prog">
+                            <center>
+                                <label for="file" id="lblStatus"></label>
+                                <progress id="file" value="0" max="100"> 32% </progress>
+                            </center>
+                        </div>
+                        <div class="">
+                            <center>
+                                <span id="msg"></span>
+                            </center>
+                        </div>
+
+                    </div>
+                </td>
+                <td width="50%">
+                    <div class="right_panel">
+                        <div class="title">
+<!--                            <h3>epicenter smart attendance system</h3>-->
+							<h5>employee face registration</h5>
+                        </div>
+                        <div class="box">
+
+                                <div class="form-grp">
+                                    <span class="ecn">ECN</span>
+                                    <span class="dots">: </span>
+                                    <span class="field"><input type="text" class="form-ecn-control" id="ecn" /></span>
+                                    <button type="button" class="btn btn-fetch" id="fetch">Fetch</button>
+                                </div>
+                                <div class="form-grp">
+                                    <span class="ecn">First Name</span>
+                                    <span class="dots">: </span>
+                                    <span class="field"><input type="text" class="form-control" id="First_Name" /></span>
+                                </div>
+                                <div class="form-grp">
+                                    <span class="ecn">Last Name</span>
+                                    <span class="dots">: </span>
+                                    <span class="field"><input type="text" class="form-control" id="Last_Name" /></span>
+                                </div>
+
+                                <div class="form-grp" style="margin-left: 85px">
+                                    <center>
+
+                                        <button type="submit" class="btn btn-submit" disabled id="submit" >Submit</button>&nbsp&nbsp&nbsp
+                                        <button type="button" class="btn train-modal" disabled id="train">Train model</button>
+                                    </center>
+                                </div>
+<!--                            </form>-->
+                        </div>
+                        <br />
+                        <div>
+                            <button type="button" class="btn report-btn" onclick="window.open('/ecas/emplist', '_blank');"></button>
+                        </div>
+<!--                        <div>-->
+<!--                            <a href="http://172.30.36.29:5000/emplist" target="_blank">EmpList</a>-->
+<!--                        </div>-->
+                    </div>
+                </td>
+            </tr>
+        </table>
+     </div>
+
+    <div id="jd" class="modal">
+        <div class="modal-content">
+            <div class="">
+                <span id="close-jd" class="close">×</span>
+                <div id="new1"><span><i class="fa fa-file-video-o"></i>&nbsp;Note</span></div>
+            </div>
+            <div class="modal-body" id="style-3">
+                <p>Please enter ECN, First Name, Last Name to start recording</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="cf" class="modal">
+        <div class="modal-content">
+            <div class="">
+                <span id="close-cf" class="close">×</span>
+                <div id="new2"><span><i class="fa fa-file-video-o"></i>&nbsp;Note</span></div>
+            </div>
+            <div class="modal-body" id="style-4">
+                <div class="">
+                    <p>Kindly confirm to start recording</p>
+                </div>
+                <div class="">
+                    <button type="button" id="start_record">Yes</button>
+                    <button type="button" id="do_not_start_record">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    <canvas id="canvas"  width="640" height="480" disabled></canvas>-->
+
+
+    <script src="static/lib/jqeury-3.4.1.min.js"></script>
+    <script type="text/javascript">
+        function validateForm() {
+<!--            var ecn = document.forms["Form"]["ecn"].value;-->
+<!--            var f_name = document.forms["Form"]["First_Name"].value;-->
+<!--            var l_name = document.forms["Form"]["Last_Name"].value;-->
+            var ecn = $("#ecn").val();
+            var f_name = $("#First_Name").val();
+            var l_name = $("#Last_Name").val();
+            var modal = document.getElementById("jd");
+
+            if (ecn == null || ecn == "", f_name == null || f_name == "", l_name == null || l_name == "") {
+                  modal.style.display = "block";
+              return false;
+            }
+
+            return true;
+        }
+
+        $('#submit').click(function(){
+            if(validateForm()) {
+                var ecn = $("#ecn").val();
+                $.ajax({
+                    url : '/ecas/regsuccess', // or whatever
+<!--                    url : '/regsuccess', // or whatever-->
+                    type: "POST",
+                    data: ecn,
+                    processData: false,
+                    contentType: false,
+                    Connection: "keep-alive",
+                    success : function (response) {
+                        $("#submit").prop('disabled', true);
+                        $("#train").prop('disabled', false);
+<!--                      alert("The server says: " + response);-->
+                    }
+                });
+            }
+        });
+
+
+
+        var modal = document.getElementById("jd");
+        var span = document.getElementById("close-jd");
+        var cf = document.getElementById("cf");
+        var close_cf = document.getElementById("close-cf");
+        var do_not_start_record = document.getElementById("do_not_start_record");
+
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+        close_cf.onclick = function () {
+            cf.style.display = "none";
+        }
+        do_not_start_record.onclick = function () {
+            cf.style.display = "none";
+        }
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+            if (event.target == cf) {
+                cf.style.display = "none";
+            }
+        }
+
+    $("#job-des-btn").click(function(){
+        if(validateForm()) {
+            var cf = document.getElementById("cf");
+            cf.style.display = "block";
+        }
+    });
+	
+	var x = document.getElementById("prog");
+    x.style.display = "none";
+
+    $("#start_record").click(function(){
+    $("#msg").text("");
+    if(validateForm()) {
+        checkAndDeleteEntry();
+
+        $("#guide").text("Turn your head left, right, bottom, up slowly");
+        var cf = document.getElementById("cf");
+        cf.style.display = "none";
+        $("#lblStatus").text("Face capturing in progress...");
+		var x = document.getElementById("prog");
+		x.style.display = "block";
+
+        record();
+
+        }
+    });
+
+    var video = document.getElementById('video');
+<!--    var canvas = document.getElementById('canvas');-->
+    var canvas = document.createElement("canvas");
+    canvas.width = 640
+    canvas.height = 480
+    var context = canvas.getContext('2d');
+
+    function record() {
+        var recordInterval = setInterval(function(){
+        formdata = new FormData();
+        for (i = 0; i < 10; i++) {
+            context.drawImage(video, 0, 0, 640, 480);
+<!--            await new Promise(r => setTimeout(r, 10));-->
+            formdata.append("image", canvas.toDataURL());
+<!--            setTimeout(() => {  formdata.append("image", canvas.toDataURL()); }, 1);-->
+        }
+        var ecn = $("#ecn").val();
+        var f_name = $("#First_Name").val();
+        var l_name = $("#Last_Name").val();
+<!--        console.log(canvas.toDataURL())-->
+        formdata.append("ecn", ecn);
+        formdata.append("f_name", f_name);
+        formdata.append("l_name", l_name);
+		console.log(formdata)
+            $.ajax({
+              url: "/ecas/record",
+<!--              url: "/record",-->
+              type: "POST",
+              data: formdata,
+              processData: false,
+			  contentType: false,
+			  Connection: "keep-alive",
+              success: function(response) {
+                console.log(response)
+                if (response >= 200){
+                    var x = document.getElementById("prog");
+                    clearInterval(recordInterval);
+                    $("#submit").prop('disabled', false);
+                    $("#file").val(0);
+                    x.style.display = "none";
+                    $("#msg").text("Face Data Captured Sucessfully");
+<!--                    $("#prog").prop('disabled', true);-->
+<!--                    $("#prog *").attr("disabled", "disabled").off('click');-->
+                }
+                $("#file").val(response/2);
+              },
+              error: function(xhr) {
+                //Do Something to handle error
+                if (xhr.status == 422){
+                    clearInterval(recordInterval);
+                    $("#msg").text("Please Enter valid ECN Number");
+                }
+              }
+            });
+        }, 2000);
+    }
+
+    function checkAndDeleteEntry() {
+        var ecn = $("#ecn").val();
+        $.ajax({
+          url: "/ecas/checkAndDeleteEntry",
+<!--          url: "/checkAndDeleteEntry",-->
+          type: "get",
+          data: {ecn:ecn},
+          success: function(response) {
+          },
+          error: function(xhr) {
+          }
+        });
+    }
+
+	$("#fetch").click(function(){
+        var ecn = $("#ecn").val();
+        $.ajax({
+          url: "/ecas/check",
+<!--          url: "/check",-->
+          type: "get",
+          data: {ecn:ecn},
+          success: function(response) {
+
+            empData = JSON.parse(response)
+            console.log(empData)
+            $("#First_Name").val(empData[0]['first_name']);
+            $("#Last_Name").val(empData[0]['last_name']);
+			$("#msg").text("");
+          },
+          error: function(xhr) {
+            //Do Something to handle error
+            if (xhr.status == 422)
+                $("#msg").text("Please Enter valid ECN Number");
+				$("#First_Name").val("");
+				$("#Last_Name").val("");
+          }
+        });
+    });
+
+
+
+    $("#train").click(function(){
+        $("#msg").text("");
+        $("#file").val(0);
+        $("#lblStatus").text("Training model in progress...");
+        var x = document.getElementById("prog");
+        x.style.display = "block";
+<!--        $("#file").val(Flask.url_for('train'));-->
+<!--        console.log($.get(Flask.url_for('train')));-->
+        var source = new EventSource('/ecas/train');
+<!--          var source = new EventSource('/train');-->
+          source.onmessage = function(e) {
+            $("#file").val(e.data);
+            console.log(e.data);
+            if (e.data == 100) {
+                source.close();
+                $("#file").val(0);
+                x.style.display = "none";
+                $("#msg").text("Data Trained Sucessfully");
+<!--                $("#submit").prop('disabled', false);-->
+                $("#train").prop('disabled', true);
+                $("#ecn").text("");
+                $("#First_Name").text("");
+                $("#Last_Name").text("");
+            }
+          }
+          source.onerror = function(e) {
+            console.log(e);
+          }
+    });
+
+    // Get access to the camera!
+    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Not adding `{ audio: true }` since we only want video now
+        navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+            //video.src = window.URL.createObjectURL(stream);
+            video.srcObject = stream;
+            video.play();
+        });
+    }
+
+    </script>
+</body>
+</html>
