@@ -9,7 +9,7 @@ embedder = FaceNet()
 # path = os.path.dirname(os.path.realpath(__file__))
 # recognizer1= pickle.loads(open(path + "/recognizer.pickle", "rb").read())
 
-def detectentry(_image, recognizer, le, lelock,lowAcc,geoloc,id,action,date):
+def detectentry(_image, recognizer, le, lelock,lowAcc,geoloc,id,action,date,comment):
 
     print("Detect Entry",len(_image))
     path = os.path.dirname(os.path.realpath(__file__))
@@ -97,7 +97,7 @@ def detectentry(_image, recognizer, le, lelock,lowAcc,geoloc,id,action,date):
                         ecn = le.classes_[j]
 
                         print("Sending Data to FE ECN====>>",ecn)
-                        data_name = attendance_captured(ecn, id, geoloc, "abcde",action,date)
+                        data_name = attendance_captured(ecn, id, geoloc, comment,action,date)
                         return [ecn,data_name]
                         # print(le1.classes_, ecn)
                 elif (a > 0.4) and (a <= 0.64):
