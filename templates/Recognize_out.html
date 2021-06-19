@@ -234,7 +234,7 @@ function sendData(ecn,name){
                         lowAcc=0;
                         $('#file').attr("value", 0);
                         setTimeout(function(){ $('#alert_msg').css("display","none");}, 3000);
-                        var win = window.open("https://072ab4697ac9.ngrok.io/landing?id="+response.value, "_self")
+                        var win = window.open("https://heroku-python-app-pd.herokuapp.com/landing?id="+response.value, "_self")
 
                 }
                 else if(response.value == "N"){
