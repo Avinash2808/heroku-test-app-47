@@ -59,7 +59,7 @@ def recognize_face():
 def detect_face_in():
     try:
         if request.method=="GET":
-            return render_template("Recognize.html",data="3117TS202106060243")
+            return render_template("Recognize.html",data="3117TS202106060243",comment="xyz_comment_in")
         else:
             data=request.form.get("deviceID")
             # data1=request.form.get("lastname")
@@ -75,7 +75,7 @@ def detect_face_in():
 def detect_face_out():
     try:
         if request.method=="GET":
-            return render_template("Recognize_out.html",data="3117TS202106060243")
+            return render_template("Recognize_out.html",data="3117TS202106060243",comment="xyz_comment_in")
         else:
             data=request.form.get("deviceID")
             loc=request.form.get("loc")
