@@ -1,7 +1,0 @@
-tensorflow-cpu==2.4.1
-sklearn
-keras-facenet
-Flask
-flask-jsglue
-imutils
-sqlalchemy
