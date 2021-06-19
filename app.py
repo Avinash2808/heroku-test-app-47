@@ -43,11 +43,12 @@ def recognize_face():
     try:
         data=request.form.getlist("image")
         lowAcc=request.form.get("low_acc")
+        comment=request.form.get("comment")
         # print("Location======>>",request.form.get("location"))
         # print("action=======>>",request.form.get("config"))
         print("Date=======>>", request.form.get("location"),request.form.get("deviceID"))
         if(len(data)>0):
-            result=detectentry(data,recognizer,le,lelock,int(lowAcc),request.form.get("location"),request.form.get("deviceID"),request.form.get("config"),request.form.get("date"))
+            result=detectentry(data,recognizer,le,lelock,int(lowAcc),request.form.get("location"),request.form.get("deviceID"),request.form.get("config"),request.form.get("date"),comment)
             return jsonify({"result": "Done","value":result[0],"name":result[1]})
         else:
             return jsonify({"result":"Error"})
@@ -66,7 +67,7 @@ def detect_face_in():
             comment = request.form.get("data")
             # data1=request.form.get("lastname")
             print("DeviceID=========>>", data, loc, comment)
-            return render_template("Recognize.html",data=data,loc=loc)
+            return render_template("Recognize.html",data=data,loc=loc,comment=comment)
     except:
         logging.exception("An exception occured=====>>")
 
@@ -81,7 +82,7 @@ def detect_face_out():
             comment=request.form.get("data")
             # data1=request.form.get("lastname")
             print("DeviceID=========>>",data,loc,comment)
-            return render_template("Recognize_out.html",data=data,loc=loc)
+            return render_template("Recognize_out.html",data=data,loc=loc,comment=comment)
     except:
         logging.exception("An exception occured=====>>")
 
