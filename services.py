@@ -117,7 +117,7 @@ def attendance_captured(ecn,deviceid,location,comments,action,date1):
     d1=x.strftime("%Y-%m-%d")
     print("Date====>",date)
     t= datetime.datetime.now().strftime("%H:%M:%S")
-    data1 = attendance_master(ecn,str(d1),str(t),deviceid,location,action,"xyz")
+    data1 = attendance_master(ecn,str(d1),str(t),deviceid,location,action,comments)
     # print("data1=====>",data1)
 
     resp1 =attendance_master_Repository.attendance_master(data1)
