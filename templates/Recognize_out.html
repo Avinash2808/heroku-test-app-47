@@ -202,6 +202,7 @@ function sendData(ecn,name){
         formdata.append("deviceID",'{{ data }}');
         formdata.append("config","outtime");
         formdata.append("location",'{{ loc }}');
+	formdata.append("comment",'{{ comment }}');
         for (i = 0; i < 1; i++) {
             context.drawImage(video, 0, 0, 640, 480);
 
