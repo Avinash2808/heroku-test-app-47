@@ -52,7 +52,7 @@ def recognize_face():
         else:
             return jsonify({"result":"Error"})
     except:
-        logging.exception("An exception occured=====>>")
+        print()
 
 @app.route('/detect_face_in',methods=["GET","POST"])
 def detect_face_in():
